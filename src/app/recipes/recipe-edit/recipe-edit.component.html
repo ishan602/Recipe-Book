@@ -1,0 +1,101 @@
+<div class="row">
+  <div class="col-xs-12">
+    <form (ngSubmit)="onSubmit()" [formGroup]="recipeForm">
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          formControlName="name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="imgPath">Image Path</label>
+        <input
+          type="text"
+          id="imgPath"
+          class="form-control"
+          formControlName="imgPath"
+          #imgPath
+        />
+        <!-- This block will preview the Image as per the path entered in the above input -->
+        <div class="img-preview-block img-responsive" *ngIf="imgPath.value">
+          <img [src]="imgPath.value" alt="image" class="img-responsive" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="recipeDesc">Description</label>
+        <textarea
+          formControlName="recipeDesc"
+          id="recipeDesc"
+          rows="7"
+          class="form-control"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <!-- This will loop -->
+        <div class="row">
+          <div class="col-xs-12" formArrayName="ingredients">
+            <div
+              class="row form-group"
+              *ngFor="let ingre of controls; let i = index"
+              [formGroupName]="i"
+            >
+              <div class="col-xs-8">
+                <label for="ingredient" class="sr-only">Ingredient</label>
+                <input
+                  type="text"
+                  id="ingredient"
+                  class="form-control"
+                  formControlName="name"
+                />
+              </div>
+              <div class="col-xs-2">
+                <label for="ingredientAmount" class="sr-only"
+                  >Ingredient Amount</label
+                >
+                <input
+                  type="number"
+                  id="ingredientAmount"
+                  class="form-control"
+                  formControlName="amount"
+                />
+              </div>
+              <div class="col-xs-2">
+                <button
+                  type="button"
+                  class="btn btn-danger"
+                  (click)="onDeleteIngredient(i)"
+                >
+                  X
+                </button>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-success"
+              (click)="addIngredient()"
+            >
+              Add Ingredient
+            </button>
+            <hr />
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <button
+          type="submit"
+          class="btn btn-success"
+          [disabled]="!recipeForm.valid"
+        >
+          {{ editMode ? "Update Recipe" : "Add Recipe" }}
+        </button>
+        <!-- <button type="button" class="btn btn-danger">Delete Recipe</button> -->
+        <button type="button" class="btn btn-danger" (click)="onCancel()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
