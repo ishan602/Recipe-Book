@@ -1,6 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { AuthService } from "./auth.service";
+import { Route, Router } from "@angular/router";
+import { Observable } from "rxjs";
+import { AuthService, AuthResponseData } from "./auth.service";
 
 @Component({
   selector: "app-auth",
@@ -12,7 +14,9 @@ export class AuthComponent implements OnInit {
   authForm: FormGroup;
   isLoading: boolean = false;
   isError: boolean = false;
-  constructor(private authService: AuthService) {}
+  error: string = null;
+  loginObs: Observable<AuthResponseData>;
+  constructor(private authService: AuthService, private route: Router) {}
 
   ngOnInit(): void {
     this.authForm = new FormGroup({
@@ -27,27 +31,35 @@ export class AuthComponent implements OnInit {
   onSwitchMode() {
     this.loginMode = !this.loginMode;
   }
+
   onSubmit() {
     console.log(this.authForm.value);
     this.isLoading = true;
     if (this.loginMode) {
+      this.loginObs = this.authService.login(
+        this.authForm.get("email").value,
+        this.authForm.get("password").value
+      );
     } else {
-      this.authService
-        .signup(
-          this.authForm.get("email").value,
-          this.authForm.get("password").value
-        )
-        .subscribe(
-          (respData) => {
-            console.log(respData);
-            this.isLoading = false;
-          },
-          (error) => {
-            console.log(error);
-            this.isLoading = false;
-          }
-        );
+      this.loginObs = this.authService.signup(
+        this.authForm.get("email").value,
+        this.authForm.get("password").value
+      );
     }
+
+    this.loginObs.subscribe(
+      (respData) => {
+        console.log(respData);
+        this.isLoading = false;
+        this.route.navigate(["/recipes"]);
+      },
+      (errorMessage) => {
+        console.log(errorMessage);
+        this.error = errorMessage;
+        this.isLoading = false;
+        this.isError = true;
+      }
+    );
 
     this.authForm.reset();
   }

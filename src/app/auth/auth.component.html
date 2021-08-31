@@ -1,6 +1,9 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3 col-xs-12">
-    <div style="text-align: center" *ngIf="isLoading">
+    <div class="alert alert-danger" *ngIf="!isLoading && isError">
+      <p>{{ error }}</p>
+    </div>
+    <div style="text-align: center" *ngIf="isLoading && !isError">
       <app-loader></app-loader>
     </div>
 
