@@ -1,8 +1,13 @@
 <div class="row">
   <div class="col-md-6 col-md-offset-3 col-xs-12">
-    <div class="alert alert-danger" *ngIf="!isLoading && isError">
+    <!-- <div class="alert alert-danger" *ngIf="!isLoading && isError">
       <p>{{ error }}</p>
-    </div>
+    </div> -->
+    <app-alert
+      [message]="error"
+      *ngIf="!isLoading && isError"
+      (close)="handleClose()"
+    ></app-alert>
     <div style="text-align: center" *ngIf="isLoading && !isError">
       <app-loader></app-loader>
     </div>

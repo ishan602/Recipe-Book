@@ -1,37 +1,12 @@
 import { NgModule } from "@angular/core";
 import { Routes, RouterModule } from "@angular/router";
-
-import { RecipesComponent } from "./recipes/recipes.component";
-import { ShoppingListComponent } from "./shopping-list/shopping-list.component";
-import { RecipeStartComponent } from "./recipes/recipe-start/recipe-start.component";
-import { RecipeDetailComponent } from "./recipes/recipe-detail/recipe-detail.component";
-import { RecipeEditComponent } from "./recipes/recipe-edit/recipe-edit.component";
-import { RecipeResolverService } from "./recipes/recipe-resolver.service";
 import { AuthComponent } from "./auth/auth.component";
-import { AuthGuardService } from "./auth/auth.guard";
 
 const appRoutes: Routes = [
+  // All the recipe related routing is in recipe-routing module file.
+  // All the shopping list related routing is in shopping-list module file.
+  // All the Auth related routing is in auth module file.
   { path: "", redirectTo: "/recipes", pathMatch: "full" },
-  {
-    path: "recipes",
-    component: RecipesComponent,
-    canActivate: [AuthGuardService],
-    children: [
-      { path: "", component: RecipeStartComponent },
-      { path: "new", component: RecipeEditComponent },
-      {
-        path: ":id",
-        component: RecipeDetailComponent,
-        resolve: [RecipeResolverService],
-      },
-      {
-        path: ":id/edit",
-        component: RecipeEditComponent,
-        resolve: [RecipeResolverService],
-      },
-    ],
-  },
-  { path: "shopping-list", component: ShoppingListComponent },
   { path: "auth", component: AuthComponent },
 ];
 
